@@ -1,0 +1,624 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model archives_export {
+  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  demande_par       String?       @db.Uuid
+  periode_debut     DateTime?     @db.Date
+  periode_fin       DateTime?     @db.Date
+  format            String?
+  horodatage_export DateTime?     @default(now()) @db.Timestamptz(6)
+  hash_fichier      String?
+  utilisateurs      utilisateurs? @relation(fields: [demande_par], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model boutiques {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nom                 String
+  siret               String?
+  adresse             String?
+  cree_le             DateTime?             @default(now()) @db.Timestamptz(6)
+  nom_gerant          String?
+  email_gerant        String?
+  telephone_gerant    String? 
+  slug                String?   @unique
+  domaine_custom      String?   @unique
+  domaine_boutique    String?   @unique
+  logo_url            String?
+  telephone           String?
+  abonnements_saas    abonnements_saas?
+  arrivages           arrivages[]
+  categories_boutique categories_boutique[]
+  clotures            clotures[]
+  locations           locations[]
+  mouvements_stock    mouvements_stock[]
+  stock               stock[]
+  tickets             tickets[]
+  utilisateurs        utilisateurs[]
+  config_creneaux_essayage config_creneaux_essayage[]
+  config_boutique           config_boutique?
+  pages_boutique            pages_boutique[]
+  resend_domain_id          String?
+  resend_domain_statut      String?
+  resend_api_key            String?
+  email_from_address        String?
+  email_from_name           String?
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model clotures {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  boutique_id    String    @db.Uuid
+  type           String
+  date_debut     DateTime  @db.Date
+  date_fin       DateTime  @db.Date
+  total_ttc      Decimal   @db.Decimal(12, 2)
+  nombre_tickets Int
+  hash_cloture   String?
+  horodatage     DateTime? @default(now()) @db.Timestamptz(6)
+  boutiques      boutiques @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model lignes_ticket {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ticket_id         String            @db.Uuid
+  variante_id       String            @db.Uuid
+  quantite          Int
+  prix_unitaire_ttc Decimal           @db.Decimal(10, 2)
+  type_ligne        String            @default("vente")
+  remise_montant    Decimal?          @db.Decimal(10, 2)
+  remise_pct        Decimal?          @db.Decimal(5, 2)
+  options_choisies  Json?
+  tickets           tickets           @relation(fields: [ticket_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  variantes_produit variantes_produit @relation(fields: [variante_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  locations         locations[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model mouvements_stock {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  variante_id       String            @db.Uuid
+  boutique_id       String            @db.Uuid
+  type              String
+  quantite_delta    Int
+  ticket_id         String?           @db.Uuid
+  horodatage        DateTime?         @default(now()) @db.Timestamptz(6)
+  boutiques         boutiques         @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tickets           tickets?          @relation(fields: [ticket_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  variantes_produit variantes_produit @relation(fields: [variante_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model produits {
+  id                       String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nom                      String
+  categorie                String?
+  categorie_id             String?                   @db.Uuid
+  description              String?
+  options_produit          Json?
+  gestion_stock            Boolean   @default(true)
+  mode_service             String[]  @default([])
+  prix_ht                  Decimal                   @db.Decimal(10, 2)
+  taux_tva                 Decimal                   @default(20.00) @db.Decimal(4, 2)
+  actif                    Boolean?                  @default(true)
+  cree_le                  DateTime?                 @default(now()) @db.Timestamptz(6)
+  mode                     String                    @default("vente")
+  sous_categorie_id        String?                   @db.Uuid
+  media_produit            media_produit[]
+  sous_categories_boutique sous_categories_boutique? @relation(fields: [sous_categorie_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  categories_boutique      categories_boutique?      @relation(fields: [categorie_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  variantes_produit        variantes_produit[]
+  avis                     avis[]
+  panier_items             panier_items[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model stock {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  variante_id       String            @db.Uuid
+  boutique_id       String            @db.Uuid
+  quantite          Int               @default(0)
+  mis_a_jour_le     DateTime?         @default(now()) @db.Timestamptz(6)
+  boutiques         boutiques         @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  variantes_produit variantes_produit @relation(fields: [variante_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([variante_id, boutique_id])
+  @@index([boutique_id])
+  @@index([variante_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model tickets {
+  id                                                                   String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  numero_sequentiel                                                    BigInt                 @default(autoincrement())
+  boutique_id                                                          String                 @db.Uuid
+  utilisateur_id                                                       String?                @db.Uuid
+  canal                                                                String
+  horodatage                                                           DateTime?              @default(now()) @db.Timestamptz(6)
+  montant_total_ttc                                                    Decimal                @db.Decimal(10, 2)
+  statut                                                               String                 @default("valide")
+  hash_precedent                                                       String?
+  hash                                                                 String?
+  signature                                                            String?
+  client_id                                                            String?                @db.Uuid
+  montant_acompte                                                      Decimal?               @db.Decimal(10, 2)
+  acompte_paye_le                                                      DateTime?              @db.Timestamptz(6)
+  stripe_payment_intent_id                                             String?
+  stripe_customer_id                                                   String?
+  stripe_payment_method_id                                             String?
+  remise_montant                                                       Decimal?               @db.Decimal(10, 2)
+  remise_pct                                                           Decimal?               @db.Decimal(5, 2)
+  mode_livraison                                                       String?
+  statut_livraison                                                     String?
+  transporteur                                                         String?
+  numero_suivi                                                         String?
+  frais_livraison                                                      Decimal?               @db.Decimal(10, 2)
+  adresse_livraison                                                    String?
+  code_postal_livraison                                                String?
+  ville_livraison                                                      String?
+  notes                                                                String?
+  ticket_html                                                          String?
+  mode_service                                                         String?
+  numero_table                                                         String?
+  nom_client_rapide                                                    String?
+  heure_retrait                                                        DateTime?              @db.Timestamptz(6)
+  options_ticket                                                       Json?
+  statut_cuisine                                                       String?
+  livreur_id                                                           String?                @db.Uuid
+  numero_commande_borne                                                Int?
+  lignes_ticket                                                        lignes_ticket[]
+  locations                                                            locations[]
+  mouvements_stock                                                     mouvements_stock[]
+  rendez_vous_essayage                                                 rendez_vous_essayage[]
+  boutiques                                                            boutiques              @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  clients                                                              clients?               @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  utilisateurs                                                         utilisateurs?          @relation(fields: [utilisateur_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tickets_compensation_tickets_compensation_nouveau_ticket_idTotickets tickets_compensation[] @relation("tickets_compensation_nouveau_ticket_idTotickets")
+  tickets_compensation_tickets_compensation_ticket_origine_idTotickets tickets_compensation[] @relation("tickets_compensation_ticket_origine_idTotickets")
+
+  @@index([boutique_id])
+  @@index([horodatage])
+  @@index([client_id])
+  @@index([statut])
+  @@index([boutique_id, horodatage])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model tickets_compensation {
+  id                                                      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ticket_origine_id                                       String    @db.Uuid
+  nouveau_ticket_id                                       String    @db.Uuid
+  motif                                                   String?
+  horodatage                                              DateTime? @default(now()) @db.Timestamptz(6)
+  tickets_tickets_compensation_nouveau_ticket_idTotickets tickets   @relation("tickets_compensation_nouveau_ticket_idTotickets", fields: [nouveau_ticket_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tickets_tickets_compensation_ticket_origine_idTotickets tickets   @relation("tickets_compensation_ticket_origine_idTotickets", fields: [ticket_origine_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model utilisateurs {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nom               String
+  email             String            @unique
+  role              String
+  boutique_id       String?           @db.Uuid
+  actif             Boolean?          @default(true)
+  cree_le           DateTime?         @default(now()) @db.Timestamptz(6)
+  prenom            String?
+  telephone         String?
+  mot_de_passe_hash String?
+  magic_link_token  String?   @unique
+  magic_link_expire_le DateTime? @db.Timestamptz(6)
+  archives_export   archives_export[]
+  tickets           tickets[]
+  locations_vendeur locations[]                  @relation("location_vendeur")
+  essayages_vendeur rendez_vous_essayage[]       @relation("essayage_vendeur")
+  boutiques         boutiques?        @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model variantes_produit {
+  id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  produit_id         String             @db.Uuid
+  taille             String?
+  couleur            String?
+  couleur_hex        String?
+  libelle_variante   String?
+  sku                String             @unique
+  prix_ttc           Decimal            @db.Decimal(10, 2)
+  prix_location_jour          Decimal?           @db.Decimal(10, 2)
+  prix_location_forfait       Decimal?           @db.Decimal(10, 2)
+  type_tarif_location         String             @default("jour")
+  nb_locations_avant_logiciel    Int                @default(0)
+  nb_locations_amortissement     Int                @default(10)
+  caution_defaut     Decimal?           @db.Decimal(10, 2)
+  prix_achat         Decimal?           @db.Decimal(10, 2)
+  lignes_arrivage    lignes_arrivage[]
+  lignes_ticket      lignes_ticket[]
+  locations          locations[]
+  mouvements_stock   mouvements_stock[]
+  stock              stock[]
+  produits           produits           @relation(fields: [produit_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  panier_items       panier_items[]
+
+  @@index([produit_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model locations {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ticket_id         String            @db.Uuid
+  ligne_ticket_id   String            @db.Uuid
+  variante_id       String            @db.Uuid
+  boutique_id       String            @db.Uuid
+  client_id         String?           @db.Uuid
+  date_debut        DateTime          @db.Date
+  date_fin          DateTime          @db.Date
+  statut            String            @default("reservee")
+  caution_montant   Decimal           @default(0) @db.Decimal(10, 2)
+  caution_statut    String            @default("encaissee")
+  montant_acompte   Decimal?          @db.Decimal(10, 2)
+  acompte_paye_le   DateTime?         @db.Timestamptz(6)
+  motif_retenue        String?
+  contrat_url          String?
+  contrat_statut       String    @default("a_generer")
+  contrat_signe_le     DateTime? @db.Timestamptz(6)
+  signature_url        String?
+  rdv_essayage_id      String?   @db.Uuid
+  stripe_caution_payment_intent_id String?
+  caution_tokens   caution_tokens[]
+  caution_pose_le      DateTime? @db.Timestamptz(6)
+  caution_expire_le    DateTime? @db.Timestamptz(6)
+  solde_montant        Decimal?  @db.Decimal(10, 2)
+  solde_paye_le        DateTime? @db.Timestamptz(6)
+  stripe_solde_payment_intent_id String?
+  montant_retenu        Decimal?  @db.Decimal(10, 2)
+  cree_le           DateTime?         @default(now()) @db.Timestamptz(6)
+  mis_a_jour_le     DateTime?         @default(now()) @db.Timestamptz(6)
+  vendeur_id        String?           @db.Uuid
+  boutiques         boutiques         @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  clients           clients?          @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  lignes_ticket     lignes_ticket     @relation(fields: [ligne_ticket_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tickets           tickets           @relation(fields: [ticket_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  variantes_produit variantes_produit @relation(fields: [variante_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  vendeur           utilisateurs?     @relation("location_vendeur", fields: [vendeur_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  rendez_vous_essayage rendez_vous_essayage[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model arrivages {
+  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  boutique_id        String            @db.Uuid
+  fournisseur        String?
+  reference_commande String?
+  date_arrivage      DateTime          @default(dbgenerated("CURRENT_DATE")) @db.Date
+  notes              String?
+  photo_bl_url       String?
+  statut              String    @default("recu")
+  date_livraison_estimee DateTime? @db.Date
+  cree_le            DateTime?         @default(now()) @db.Timestamptz(6)
+  boutiques          boutiques         @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  lignes_arrivage    lignes_arrivage[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model clients {
+  id                       String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nom                      String
+  prenom                   String?
+  email                    String?                @unique
+  telephone                String?                @unique
+  adresse                  String?
+  code_postal              String?
+  ville                    String?
+  avis                     avis[]
+  panier_items  panier_items[]
+  notes_internes           String?
+  cree_le                  DateTime?              @default(now()) @db.Timestamptz(6)
+
+  // --- Authentification boutique (nullable si créé en caisse sans inscription) ---
+  password_hash            String?
+
+  telephone_verifie        Boolean   @default(false)
+  otp_code                 String?
+  otp_expire_le            DateTime? @db.Timestamptz(6)
+
+  // --- Traçabilité création ---
+  source_creation          String                 @default("creation_caisse") // inscription_boutique | creation_caisse | auto_premiere_commande
+  cree_par_user_id         String?                @db.Uuid
+
+  // --- RGPD ---
+  cgv_acceptees_le         DateTime?              @db.Timestamptz(6)
+  consentement_marketing   Boolean                @default(false)
+  consentement_marketing_le DateTime?             @db.Timestamptz(6)
+  derniere_activite_le     DateTime?              @default(now()) @db.Timestamptz(6)
+  anonymise_le             DateTime?              @db.Timestamptz(6)
+
+  tickets                  tickets[]
+  locations                locations[]
+  rendez_vous_essayage     rendez_vous_essayage[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model config_creneaux_essayage {
+  id                     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  boutique_id            String    @db.Uuid
+  jour_semaine           Int       // 0 = dimanche ... 6 = samedi
+  heure_debut            String    // "10:00"
+  heure_fin              String    // "19:00"
+  duree_creneau_minutes  Int       @default(30)
+  capacite_simultanee    Int       @default(1) // ex: nb de cabines disponibles
+  actif                  Boolean   @default(true)
+  boutiques              boutiques @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model rendez_vous_essayage {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  client_id     String    @db.Uuid
+  date_heure    DateTime  @db.Timestamptz(6)
+  duree_minutes Int       @default(30)
+  statut        String    @default("a_venir") // a_venir | confirme | termine | annule | no_show
+  source        String    // reserve_en_ligne | pris_en_boutique
+  ticket_id     String?   @db.Uuid
+  location_id   String?   @db.Uuid
+  notes         String?
+  vendeur_id    String?   @db.Uuid
+  cree_le       DateTime? @default(now()) @db.Timestamptz(6)
+  clients       clients   @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tickets       tickets?  @relation(fields: [ticket_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  locations     locations? @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  vendeur       utilisateurs? @relation("essayage_vendeur", fields: [vendeur_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([date_heure])
+  @@index([client_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model lignes_arrivage {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  arrivage_id       String            @db.Uuid
+  variante_id       String            @db.Uuid
+  quantite          Int
+  quantite_commandee Int?
+  cout_unitaire     Decimal?          @db.Decimal(10, 2)
+  arrivages         arrivages         @relation(fields: [arrivage_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  variantes_produit variantes_produit @relation(fields: [variante_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model abonnements_saas {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  boutique_id        String    @unique @db.Uuid
+  client_depuis      DateTime  @default(dbgenerated("CURRENT_DATE")) @db.Date
+  montant_annuel     Decimal   @db.Decimal(10, 2)
+  statut_paiement    String    @default("a_jour")
+  prochaine_echeance DateTime? @db.Date
+  notes              String?
+  photo_bl_url       String?
+  statut              String    @default("recu")
+  date_livraison_estimee DateTime? @db.Date
+  cree_le            DateTime? @default(now()) @db.Timestamptz(6)
+  stripe_account_id        String?   @unique
+  stripe_onboarding_statut String    @default("non_connecte")
+  stripe_charges_actives   Boolean   @default(false)
+  stripe_virements_actifs  Boolean   @default(false)
+  commission_active        Boolean   @default(false)
+  commission_pct           Decimal?  @db.Decimal(5, 2)
+  modules_actifs           String[]  @default([])
+  stripe_customer_id       String?   @unique
+  stripe_subscription_id   String?   @unique
+  boutiques          boutiques @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model media_produit {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  produit_id     String    @db.Uuid
+  type           String
+  url            String
+  est_couverture Boolean   @default(false)
+  couleur        String?
+  ordre          Int       @default(0)
+  cree_le        DateTime? @default(now()) @db.Timestamptz(6)
+  produits       produits  @relation(fields: [produit_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model categories_boutique {
+  id                       String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  boutique_id              String                     @db.Uuid
+  nom                      String
+  ordre                    Int                        @default(0)
+  visible                  Boolean                    @default(true)
+  cree_le                  DateTime?                  @default(now()) @db.Timestamptz(6)
+  boutiques                boutiques                  @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  sous_categories_boutique sous_categories_boutique[]
+  pages_boutique           pages_boutique[]
+  produits                 produits[]
+}
+
+model pages_boutique {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  boutique_id     String    @db.Uuid
+  nom             String
+  slug            String
+  type            String    @default("editoriale")
+  ordre           Int       @default(0)
+  visible         Boolean   @default(true)
+  dans_menu       Boolean   @default(true)
+  categorie_id    String?   @db.Uuid
+  cree_le         DateTime? @default(now()) @db.Timestamptz(6)
+  mis_a_jour_le   DateTime? @default(now()) @db.Timestamptz(6)
+  boutiques       boutiques @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  categorie       categories_boutique? @relation(fields: [categorie_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  sections        sections_page[]
+}
+
+model sections_page {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  page_id     String    @db.Uuid
+  type        String
+  ordre       Int       @default(0)
+  contenu     Json      @default("{}")
+  cree_le     DateTime? @default(now()) @db.Timestamptz(6)
+  pages       pages_boutique @relation(fields: [page_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model sous_categories_boutique {
+  id                  String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categorie_id        String              @db.Uuid
+  nom                 String
+  ordre               Int                 @default(0)
+  cree_le             DateTime?           @default(now()) @db.Timestamptz(6)
+  produits            produits[]
+  categories_boutique categories_boutique @relation(fields: [categorie_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model avis {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  produit_id  String   @db.Uuid
+  client_id   String   @db.Uuid
+  note        Int
+  commentaire String?
+  cree_le     DateTime @default(now())
+ 
+  produit     produits @relation(fields: [produit_id], references: [id], onDelete: Cascade)
+  client      clients  @relation(fields: [client_id],  references: [id], onDelete: Cascade)
+ 
+  @@unique([produit_id, client_id])
+  @@index([produit_id])
+}
+ 
+model panier_items {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  client_id   String    @db.Uuid
+  boutique_id String    @db.Uuid
+  produit_id  String    @db.Uuid
+  variante_id String    @db.Uuid
+  quantite    Int       @default(1)
+  date_debut  DateTime?
+  date_fin    DateTime?
+  cree_le     DateTime  @default(now())
+ 
+  client      clients   @relation(fields: [client_id],   references: [id], onDelete: Cascade)
+  produit     produits  @relation(fields: [produit_id],  references: [id], onDelete: Cascade)
+  variante    variantes_produit @relation(fields: [variante_id], references: [id], onDelete: Cascade)
+
+  @@index([client_id])
+  @@index([boutique_id])
+}
+
+model caution_tokens {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  location_id  String    @db.Uuid
+  token        String    @unique @default(dbgenerated("gen_random_uuid()"))
+  utilise      Boolean   @default(false)
+  expire_le    DateTime  @db.Timestamptz(6)
+  cree_le      DateTime? @default(now()) @db.Timestamptz(6)
+  locations    locations @relation(fields: [location_id], references: [id], onDelete: Cascade)
+}
+
+model config_boutique {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  boutique_id           String    @unique @db.Uuid
+  acompte_pct           Decimal   @default(30) @db.Decimal(5, 2)
+  frais_livraison       Decimal   @default(0) @db.Decimal(10, 2)
+  livraison_active      Boolean   @default(false)
+  delai_rappel_contrat  Int       @default(2)
+  stripe_mode           String    @default("test")
+  couleur_principale    String?   @default("#1a1a16")
+  couleur_fond          String?   @default("#f7f5f0")
+  couleur_texte         String?   @default("#1a1a16")
+  police                String?   @default("Georgia")
+  logo_position         String?   @default("gauche")
+  logo_hauteur          Int?      @default(48)
+  couleur_header        String?   @default("#f7f5f0")
+  couleur_header_mobile String?   @default("#f7f5f0")
+  banniere_couleur_texte String?  @default("#ffffff")
+  logo_position_mobile  String?   @default("centre")
+  couleur_fond_articles String?   @default("#f7f5f0")
+  filtres_visibles      Boolean?  @default(true)
+  filtres_visibles_mobile Boolean? @default(true)
+  couleur_fond_filtres  String?   @default("#f7f5f0")
+  couleur_bouton_filtre_actif String? @default("#1a1a16")
+  banniere_type         String?   @default("texte")
+  banniere_texte        String?
+  banniere_sous_texte   String?
+  banniere_images       String[]  @default([])
+  // ── Bannière top ──
+  barre_top_active      Boolean?  @default(false)
+  barre_top_texte       String?   @default("Bienvenue sur notre boutique")
+  barre_top_couleur_fond String?  @default("#1a1a16")
+  barre_top_couleur_texte String? @default("#ffffff")
+  barre_top_taille      String?   @default("sm")
+  // ── Global ──
+  couleur_secondaire    String?   @default("#b8923f")
+  border_radius         String?   @default("8px")
+  police_titres         String?   @default("Georgia")
+  police_corps          String?   @default("Georgia")
+  // ── Header ──
+  couleur_texte_header  String?   @default("#1a1a16")
+  icone_recherche       Boolean?  @default(true)
+  icone_compte          Boolean?  @default(true)
+  icone_favoris         Boolean?  @default(false)
+  icone_panier          Boolean?  @default(true)
+  icone_recherche_mobile Boolean? @default(false)
+  icone_compte_mobile   Boolean?  @default(true)
+  icone_favoris_mobile  Boolean?  @default(false)
+  icone_panier_mobile   Boolean?  @default(true)
+  nav_lien_accueil      Boolean?  @default(true)
+  nav_lien_accueil_label String?  @default("Boutique")
+  style_menu            String?   @default("horizontal")
+  style_icones          String?   @default("outline")
+  burger_position       String?   @default("droite")
+  icones_position       String?   @default("droite")
+  burger_position_mobile String?  @default("gauche")
+  icones_position_mobile String?  @default("droite")
+  // ── Cartes produit ──
+  carte_ratio           String?   @default("4/5")
+  carte_afficher_prix   Boolean?  @default(true)
+  carte_afficher_couleurs Boolean? @default(true)
+  carte_afficher_tailles String?  @default("hover")
+  carte_bouton_panier   String?   @default("hover")
+  carte_bouton_position String?   @default("overlay")
+  // ── Footer ──
+  footer_couleur_fond   String?   @default("#1a1a16")
+  footer_couleur_texte  String?   @default("#f7f5f0")
+  footer_reseaux        Json?     @default("[]")
+  footer_newsletter     Boolean?  @default(true)
+  footer_newsletter_texte String? @default("Votre adresse e-mail")
+  footer_reassurance    Json?     @default("[]")
+  footer_colonnes       Json?     @default("[]")
+  // ── Borne commander ──
+  header_mode_borne     Boolean?  @default(false)
+  borne_fond_type       String?   @default("couleur")
+  borne_fond_url        String?
+  // ── Livraison ──
+  livraison_adresse_restaurant String?
+  livraison_tarif_km    Decimal?  @default(1) @db.Decimal(5, 2)
+  livraison_frais_fixes Decimal?  @default(0) @db.Decimal(5, 2)
+  livraison_km_max      Int?      @default(20)
+  livraison_gratuite_a_partir_de Decimal? @db.Decimal(8, 2)
+  cree_le               DateTime? @default(now()) @db.Timestamptz(6)
+  mis_a_jour_le         DateTime? @default(now()) @db.Timestamptz(6)
+  boutiques             boutiques @relation(fields: [boutique_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}

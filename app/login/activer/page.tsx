@@ -6,7 +6,7 @@ const GOLD = "#b8923f";
 const DARK = "#1a1a16";
 const BG = "#f7f5f0";
 const TEXTE_LIGHT = "#6b6b5f";
-const API = "https://www.shahidacollection.com";
+const API = "";
 
 function ActiverContent() {
   const params = useSearchParams();
