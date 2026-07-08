@@ -46,7 +46,7 @@ export default function Inscription() {
     }
     setLoading(true);
     try {
-      const res = await fetch("https://www.shahidacollection.com/api/saas/inscription", {
+      const res = await fetch("/api/saas/inscription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, nom_boutique: nomBoutique, plan }),
