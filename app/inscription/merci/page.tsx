@@ -22,6 +22,9 @@ function MerciContent() {
         <p style={{ color: "#6b6b5f", fontSize: "1rem", lineHeight: 1.7, marginBottom: "2rem" }}>
           Votre compte est en cours de création. Vous recevrez un email avec votre lien d'accès dans quelques minutes.
         </p>
+        <div style={{ background: "#fffbf0", border: "1px solid #f0d080", borderRadius: "10px", padding: "1rem 1.2rem", marginBottom: "2rem", fontSize: "0.88rem", color: "#7d6000" }}>
+          Votre espace sera accessible dans <strong>5 à 10 minutes</strong> le temps que votre adresse soit activée. Si vous tentez de vous connecter trop tôt, vous verrez une erreur SSL — c'est normal, patientez quelques instants.
+        </div>
         <div style={{ background: "#fff", borderRadius: "12px", padding: "1.5rem", border: "1px solid #e8e4dc", marginBottom: "2rem", textAlign: "left" }}>
           <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#6b6b5f", marginBottom: "1rem", letterSpacing: "0.08em" }}>PROCHAINES ÉTAPES</div>
           {[
