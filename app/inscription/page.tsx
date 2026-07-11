@@ -141,9 +141,8 @@ export default function Inscription() {
             <label style={{ fontSize: "0.82rem", fontWeight: 600, color: DARK, display: "block", marginBottom: "0.4rem" }}>Type d'activité</label>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {[
-                { id: "mode", label: "Boutique de mode", desc: "Vente + location de vêtements" },
-                { id: "restauration", label: "Restauration", desc: "Borne de commande + cuisine + livraison" },
-                { id: "les_deux", label: "Les deux", desc: "Mode et restauration" },
+                { id: "mode", label: "Commerce / Boutique", desc: "Vente, location, gestion stock" },
+                { id: "restauration", label: "Restauration / Food", desc: "Borne de commande, cuisine, livraison" },
               ].map(a => (
                 <div key={a.id} onClick={() => setActivite(a.id)} style={{ display: "flex", alignItems: "center", gap: "0.8rem", padding: "0.75rem 1rem", border: `1.5px solid ${activite === a.id ? GOLD : "#e8e4dc"}`, borderRadius: "8px", cursor: "pointer", background: activite === a.id ? "#fffbf2" : "#fff" }}>
                   <div style={{ width: 16, height: 16, borderRadius: "50%", border: `2px solid ${activite === a.id ? GOLD : "#ccc"}`, background: activite === a.id ? GOLD : "transparent", flexShrink: 0 }} />
