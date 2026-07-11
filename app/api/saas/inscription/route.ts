@@ -13,7 +13,7 @@ export async function OPTIONS() {
 
 export async function POST(req: Request) {
   try {
-    const { email, nom_boutique, plan } = await req.json();
+    const { email, nom_boutique, plan, activite } = await req.json();
 
     if (!email || !nom_boutique || !plan || !PLANS[plan]) {
       return NextResponse.json({ error: "Données manquantes" }, { status: 400 });
@@ -28,8 +28,8 @@ export async function POST(req: Request) {
       customer_email: email,
       line_items: [{ price: PLANS[plan], quantity: 1 }],
       allow_promotion_codes: true,
-      metadata: { email, nom_boutique, plan },
-      subscription_data: { metadata: { email, nom_boutique, plan } },
+      metadata: { email, nom_boutique, plan, activite: activite ?? "mode" },
+      subscription_data: { metadata: { email, nom_boutique, plan, activite: activite ?? "mode" } },
       success_url: `${origin}/inscription/merci?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/inscription`,
     });

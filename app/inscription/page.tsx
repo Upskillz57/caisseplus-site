@@ -35,6 +35,7 @@ export default function Inscription() {
   const [plan, setPlan] = useState("pack");
   const [email, setEmail] = useState("");
   const [nomBoutique, setNomBoutique] = useState("");
+  const [activite, setActivite] = useState("mode");
   const [loading, setLoading] = useState(false);
   const [erreur, setErreur] = useState("");
 
@@ -49,7 +50,7 @@ export default function Inscription() {
       const res = await fetch("/api/saas/inscription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, nom_boutique: nomBoutique, plan }),
+        body: JSON.stringify({ email, nom_boutique: nomBoutique, plan, activite }),
       });
       const data = await res.json();
       if (data.url) {
@@ -134,6 +135,25 @@ export default function Inscription() {
               placeholder="Ex: Le Burger, Maison Dupont..."
               style={{ width: "100%", padding: "0.75rem 1rem", border: "1.5px solid #e8e4dc", borderRadius: "8px", fontSize: "0.9rem", fontFamily: "Jost, sans-serif", color: DARK, background: BG, transition: "border-color 0.15s" }}
             />
+          </div>
+
+          <div style={{ marginBottom: "1.2rem" }}>
+            <label style={{ fontSize: "0.82rem", fontWeight: 600, color: DARK, display: "block", marginBottom: "0.4rem" }}>Type d'activité</label>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              {[
+                { id: "mode", label: "Boutique de mode", desc: "Vente + location de vêtements" },
+                { id: "restauration", label: "Restauration", desc: "Borne de commande + cuisine + livraison" },
+                { id: "les_deux", label: "Les deux", desc: "Mode et restauration" },
+              ].map(a => (
+                <div key={a.id} onClick={() => setActivite(a.id)} style={{ display: "flex", alignItems: "center", gap: "0.8rem", padding: "0.75rem 1rem", border: `1.5px solid ${activite === a.id ? GOLD : "#e8e4dc"}`, borderRadius: "8px", cursor: "pointer", background: activite === a.id ? "#fffbf2" : "#fff" }}>
+                  <div style={{ width: 16, height: 16, borderRadius: "50%", border: `2px solid ${activite === a.id ? GOLD : "#ccc"}`, background: activite === a.id ? GOLD : "transparent", flexShrink: 0 }} />
+                  <div>
+                    <div style={{ fontSize: "0.88rem", fontWeight: 600, color: DARK }}>{a.label}</div>
+                    <div style={{ fontSize: "0.78rem", color: TEXTE_LIGHT }}>{a.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div style={{ marginBottom: "1.5rem" }}>
