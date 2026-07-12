@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { Logo } from "./components/Logo";
 
 const MARINE = "#0D1B2A";
@@ -59,6 +60,7 @@ export default function Home() {
       <section style={{ background: MARINE }}>
         <div className="hero-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 2rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
           <div>
+            <Image src="/logo-Cplus.png" alt="CaissePlus" width={555} height={329} priority style={{ width: 190, height: "auto", marginBottom: "1.8rem" }} />
             <div style={{ display: "inline-block", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "20px", padding: "0.3rem 1rem", fontSize: "0.72rem", color: BLUE_LIGHT, fontWeight: 700, marginBottom: "1.5rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Logiciel de caisse SaaS</div>
             <h1 className="hero-title" style={{ fontSize: "3rem", lineHeight: 1.15, fontWeight: 600, color: "#fff", marginBottom: "1.5rem" }}>
               La caisse connectée pour boutiques et restaurants
