@@ -180,6 +180,21 @@ img { max-width: 100%; }
 .cp-bulle-haut { top: 0.6rem; left: 2%; }
 .cp-bulle-bas { bottom: 16%; right: 2%; }
 
+/* Location (bloc inversé : visuel à gauche) */
+.cp-borne-mobile-inverse { grid-template-columns: 1fr 1.25fr; margin-top: 1.6rem; }
+.cp-borne-mobile-inverse .cp-borne-mobile-visuel { order: -1; }
+.cp-loc-ligne { display: flex; justify-content: space-between; padding: 8px 0; border-top: 1px solid #1E2A2D; border-bottom: 1px solid #1E2A2D; margin-bottom: 8px; font-size: 9.5px; }
+.cp-loc-etape { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 8px; background: #172124; margin-bottom: 6px; }
+.cp-loc-etape > div { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+.cp-loc-etape span:not(.cp-loc-puce) { color: #8FA3A6; font-size: 8px; }
+.cp-loc-puce { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 8px; background: #26353A; color: #C9D6D8; flex-shrink: 0; }
+.cp-loc-etape.fait .cp-loc-puce { background: var(--turquoise); color: var(--sur-turquoise); }
+.cp-loc-etape > strong { white-space: nowrap; }
+.cp-loc-etape.fait > strong { color: var(--turquoise); }
+.cp-loc-caution { margin: 6px 0 12px; padding: 8px; border-radius: 8px; border: 1px dashed rgba(30, 216, 184, 0.55); background: rgba(30, 216, 184, 0.07); }
+.cp-loc-caution div { display: flex; flex-direction: column; gap: 2px; }
+.cp-loc-caution span { color: #8FA3A6; font-size: 8px; }
+
 /* ───────── Tarifs ───────── */
 .cp-tarifs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; align-items: center; max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
 .cp-offre { background: var(--carte-nuit); border: 1px solid var(--bordure-nuit); border-radius: 16px; padding: 2rem 1.7rem; display: flex; flex-direction: column; }
@@ -245,6 +260,8 @@ img { max-width: 100%; }
   .cp-grille-3, .cp-tarifs { grid-template-columns: 1fr; }
   .cp-borne-mobile { grid-template-columns: 1fr; padding: 2rem 1.4rem; gap: 2rem; }
   .cp-borne-mobile-liste { grid-template-columns: 1fr; }
+  .cp-borne-mobile-inverse { grid-template-columns: 1fr; }
+  .cp-borne-mobile-inverse .cp-borne-mobile-visuel { order: 0; }
   .cp-tarifs { max-width: 460px; }
   .cp-section { padding: 4rem 0; }
 }
@@ -260,4 +277,5 @@ img { max-width: 100%; }
   .cp-hero-boutons .cp-btn, .cp-final-boutons .cp-btn { width: 100%; }
   .cp-final-garanties { gap: 1rem; flex-direction: column; align-items: center; }
   .cp-telephone { right: -2%; width: 42%; }
+  .cp-telephone-seul { right: auto; width: 230px; }
 }

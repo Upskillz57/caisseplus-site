@@ -30,6 +30,11 @@ const I = {
   video: <><rect x="2" y="6" width="14" height="12" rx="2" /><path d="m16 10 6-3v10l-6-3" /></>,
   coche: <path d="M20 6 9 17l-5-5" />,
   fleche: <path d="M5 12h14M13 6l6 6-6 6" />,
+  contrat: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" /><path d="M14 2v6h6M8 13h8M8 17h5" /></>,
+  cadenas: <><rect x="4" y="11" width="16" height="11" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></>,
+  archive: <><rect x="2" y="3" width="20" height="5" rx="1" /><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4" /></>,
+  etapes: <><circle cx="5" cy="12" r="2.5" /><circle cx="19" cy="12" r="2.5" /><path d="M7.5 12h9" /></>,
+  ticket: <><path d="M4 2h16v20l-3-2-3 2-2-2-2 2-3-2-3 2Z" /><path d="M8 7h8M8 11h8M8 15h5" /></>,
 };
 
 /* Vagues lumineuses (fond des sections sombres et de l'appel final). */
@@ -156,6 +161,20 @@ const BORNE_MOBILE = [
   { icone: I.couverts, titre: "Envoi direct en cuisine", texte: "Chaque commande s'affiche sur l'écran cuisine, sans ressaisie ni ticket perdu." },
   { icone: I.ecran, titre: "Gestion interne centralisée", texte: "Commandes de la caisse, de la borne et du téléphone réunies sur un seul écran." },
   { icone: I.camion, titre: "Livraison et suivi", texte: "Frais calculés selon la distance, suivi de chaque livraison et client prévenu à chaque étape." },
+];
+
+const LOCATION = [
+  { icone: I.carte, titre: "Caution par empreinte bancaire", texte: "La carte du client est enregistrée au retrait, sans rien débiter. Vous ne prélevez que si le matériel revient abîmé ou en retard." },
+  { icone: I.etapes, titre: "Paiement en plusieurs fois", texte: "Un acompte pour réserver, le solde au retrait : votre client étale son paiement, vous bloquez la date." },
+  { icone: I.contrat, titre: "Contrat signé en ligne", texte: "Le contrat est créé automatiquement et signé par le client, sans papier." },
+  { icone: I.calendrier, titre: "Planning et retours", texte: "Disponibilités en temps réel, aucune double réservation, retours suivis et caution libérée en un clic." },
+];
+
+const CONFORMITE = [
+  { icone: I.cadenas, titre: "Inaltérabilité", texte: "Une vente validée ne peut plus être modifiée ni supprimée. Une erreur se corrige par un avoir, jamais en effaçant." },
+  { icone: I.bouclier, titre: "Sécurisation", texte: "Chaque ticket est numéroté et chaîné au précédent : la moindre modification se voit." },
+  { icone: I.ticket, titre: "Conservation", texte: "Clôtures journalières, mensuelles et annuelles, automatiques ou manuelles, conservées avec leurs totaux par taux de TVA." },
+  { icone: I.archive, titre: "Archivage", texte: "Ventes et clôtures sont archivées et exportables à tout moment, pour votre comptable ou en cas de contrôle." },
 ];
 
 const OFFRES = [
@@ -296,6 +315,63 @@ export default function Home() {
               <div className="cp-bulle cp-bulle-haut"><Icone taille={16}>{I.couverts}</Icone>Envoyée en cuisine</div>
               <div className="cp-bulle cp-bulle-bas"><Icone taille={16}>{I.camion}</Icone>En livraison · 12 min</div>
             </div>
+          </div>
+
+          {/* Location : empreinte bancaire et paiement en plusieurs fois */}
+          <div className="cp-borne-mobile cp-borne-mobile-inverse">
+            <div className="cp-borne-mobile-texte">
+              <span className="cp-pastille">Location</span>
+              <h3 className="cp-borne-mobile-titre">Louez sans immobiliser l&apos;argent de vos clients</h3>
+              <p className="cp-sous-titre">
+                Votre client réserve en ligne, paie en plusieurs fois et laisse une simple empreinte bancaire en guise de caution. Plus de chèque à garder dans le tiroir, plus de liquide à rendre.
+              </p>
+              <ul className="cp-borne-mobile-liste">
+                {LOCATION.map(b => (
+                  <li key={b.titre}>
+                    <span className="cp-icone"><Icone taille={20}>{b.icone}</Icone></span>
+                    <div><strong>{b.titre}</strong><span>{b.texte}</span></div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="cp-borne-mobile-visuel" aria-hidden="true">
+              <div className="cp-telephone cp-telephone-seul">
+                <div className="cp-telephone-ecran">
+                  <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}><LogoMark size={20} /></div>
+                  <div style={{ fontWeight: 700, fontSize: 11, marginBottom: 2 }}>Votre location</div>
+                  <div style={{ color: "#8FA3A6", marginBottom: 10 }}>Du vendredi au dimanche · 3 jours</div>
+                  <div className="cp-loc-ligne"><span>Total de la location</span><strong>90,00 €</strong></div>
+                  <div className="cp-loc-etape fait"><span className="cp-loc-puce">1</span><div><strong>Acompte à la réservation</strong><span>Payé aujourd&apos;hui</span></div><strong>30,00 €</strong></div>
+                  <div className="cp-loc-etape"><span className="cp-loc-puce">2</span><div><strong>Solde au retrait</strong><span>Vendredi</span></div><strong>60,00 €</strong></div>
+                  <div className="cp-loc-caution">
+                    <div><strong>Caution 300 €</strong><span>Empreinte bancaire, rien n&apos;est débité</span></div>
+                  </div>
+                  <div className="cp-ticket-bouton" style={{ marginTop: "auto" }}>Signer le contrat</div>
+                </div>
+              </div>
+              <div className="cp-bulle cp-bulle-haut"><Icone taille={16}>{I.carte}</Icone>Empreinte · 0 € débité</div>
+              <div className="cp-bulle cp-bulle-bas"><Icone taille={16}>{I.contrat}</Icone>Contrat signé</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONFORMITÉ */}
+      <section id="conformite" className="cp-section">
+        <div className="cp-conteneur">
+          <div className="cp-entete">
+            <span className="cp-pastille">Loi anti-fraude TVA</span>
+            <h2 className="cp-titre">Une caisse construite pour la loi anti‑fraude</h2>
+            <p className="cp-sous-titre">Depuis 2018, tout commerçant assujetti à la TVA doit utiliser une caisse qui garantit quatre conditions. CaissePlus les applique toutes, sans réglage de votre part.</p>
+          </div>
+          <div className="cp-grille-4">
+            {CONFORMITE.map(f => (
+              <div key={f.titre} className="cp-carte">
+                <div className="cp-icone"><Icone>{f.icone}</Icone></div>
+                <h3>{f.titre}</h3>
+                <p>{f.texte}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
