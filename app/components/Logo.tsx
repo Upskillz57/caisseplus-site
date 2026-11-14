@@ -1,29 +1,48 @@
-const GRADIENT = "linear-gradient(135deg, #7C83F5 0%, #D99AEC 100%)";
+// Logo officiel CaissePlus Pay — même identité que la caisse (ma-shahidacaisse,
+// components/LogoCaissePlus.tsx) : pictogramme turquoise, « Caisse » blanc ou marine,
+// « Plus » turquoise, sous-titre « — BORNE — » encadré de filets turquoise.
+// Sur fond clair, le turquoise vif manque de contraste : picto et « Plus » passent au
+// vert foncé de la caisse en mode jour (#0E8C76).
+const TURQUOISE = "#1ED8B8";
+const VERT_FONCE = "#0E8C76";
+const PICTO = "/icons/picto-caisseplus.png";
+const PICTO_FONCE = "/icons/picto-caisseplus-fonce.png";
 
-export function LogoMark({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#7C83F5" />
-          <stop offset="100%" stopColor="#D99AEC" />
-        </linearGradient>
-      </defs>
-      <rect width="100" height="100" rx="20" fill="#0D1B2A" />
-      <path d="M 84 38 A 22 22 0 0 0 62 16 L 38 16 A 22 22 0 0 0 16 38 L 16 62 A 22 22 0 0 0 38 84 L 62 84 A 22 22 0 0 0 84 62" stroke="#FFFFFF" strokeWidth="13" strokeLinecap="round" fill="none" />
-      <path d="M 80 34 V 66 M 64 50 H 96" stroke="url(#logo-gradient)" strokeWidth="11" strokeLinecap="round" />
-    </svg>
-  );
+export function LogoMark({ size = 32, on = "dark" }: { size?: number; on?: "light" | "dark" }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={on === "light" ? PICTO_FONCE : PICTO} alt="" aria-hidden="true" width={size} height={size} style={{ width: size, height: size, flexShrink: 0, display: "block", objectFit: "contain" }} />;
 }
 
-export function Logo({ on = "light", size = 28, fontSize = "1.15rem" }: { on?: "light" | "dark"; size?: number; fontSize?: string }) {
-  const caisseColor = on === "dark" ? "#7FA6FF" : "#0D1B2A";
+export function Logo({
+  on = "light",
+  size = 34,
+  sousTitre = "BORNE",
+}: {
+  on?: "light" | "dark";
+  size?: number;
+  sousTitre?: string | null;
+}) {
+  const couleurBase = on === "dark" ? "#FFFFFF" : "#0D1B2A";
+  const accent = on === "dark" ? TURQUOISE : VERT_FONCE;
+  const taillePolice = Math.round(size * 0.62);
+  const filet = Math.max(1, Math.round(size * 0.05));
+
   return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
-      <LogoMark size={size} />
-      <span style={{ fontWeight: 700, fontSize }}>
-        <span style={{ color: caisseColor }}>Caisse</span>
-        <span style={{ background: GRADIENT, WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>Plus</span>
+    <span aria-label="CaissePlus" style={{ display: "inline-flex", alignItems: "center", gap: Math.round(size * 0.28) }}>
+      <LogoMark size={size} on={on} />
+      <span style={{ display: "inline-flex", flexDirection: "column", alignItems: "stretch", lineHeight: 1 }}>
+        <span style={{ fontWeight: 700, fontSize: taillePolice, letterSpacing: "-0.02em", color: couleurBase, whiteSpace: "nowrap" }}>
+          Caisse<span style={{ color: accent }}>Plus</span>
+        </span>
+        {sousTitre && (
+          <span style={{ display: "flex", alignItems: "center", gap: Math.max(4, Math.round(size * 0.14)), marginTop: Math.round(size * 0.14) }}>
+            <span style={{ flex: 1, height: filet, background: accent, borderRadius: 2, minWidth: 6 }} />
+            <span style={{ fontSize: Math.max(7, Math.round(size * 0.24)), fontWeight: 500, letterSpacing: "0.32em", marginRight: "-0.32em", color: couleurBase, whiteSpace: "nowrap" }}>
+              {sousTitre}
+            </span>
+            <span style={{ flex: 1, height: filet, background: accent, borderRadius: 2, minWidth: 6 }} />
+          </span>
+        )}
       </span>
     </span>
   );

@@ -1,193 +1,345 @@
-"use client";
-import Image from "next/image";
-import { Logo } from "./components/Logo";
+/* eslint-disable @next/next/no-img-element */
+import type { ReactNode } from "react";
+import { Logo, LogoMark } from "./components/Logo";
 
-const MARINE = "#0D1B2A";
-const MARINE_LIGHT = "#16273D";
-const BLUE = "#2563EB";
-const BLUE_LIGHT = "#7FA6FF";
-const GREEN = "#22C55E";
-const BG = "#F2F4F7";
-const TEXT = "#0D1B2A";
-const TEXT_LIGHT = "#5B6472";
-const HERO_SUBTEXT = "#9aa5b5";
-const BORDER = "rgba(13,27,42,0.12)";
-const GRADIENT = "linear-gradient(135deg, #7C83F5 0%, #D99AEC 100%)";
+const CONTACT = "contact@caisseplus.fr";
+
+/* ───────── Icônes (trait 1.8, couleur héritée) ───────── */
+function Icone({ children, taille = 22 }: { children: ReactNode; taille?: number }) {
+  return (
+    <svg width={taille} height={taille} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {children}
+    </svg>
+  );
+}
+const I = {
+  panier: <><circle cx="9" cy="20" r="1.4" /><circle cx="18" cy="20" r="1.4" /><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 8H6" /></>,
+  borne: <><rect x="5" y="2" width="14" height="20" rx="2" /><rect x="8" y="5" width="8" height="7" rx="1" /><path d="M9 16h6M9 19h3" /></>,
+  couches: <><path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 12 10 5 10-5" /><path d="m2 17 10 5 10-5" /></>,
+  calendrier: <><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" /></>,
+  carte: <><rect x="2" y="5" width="20" height="14" rx="2" /><path d="M2 10h20M6 15h4" /></>,
+  nuage: <path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8A6 6 0 0 0 4.5 12 3.5 3.5 0 0 0 6 19h11.5Z" />,
+  ecran: <><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></>,
+  boutique: <><path d="M3 9h18l-1.5-5h-15L3 9Z" /><path d="M4 9v11h16V9" /><path d="M9 20v-6h6v6" /></>,
+  couverts: <><path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2" /><path d="M17 22V2c-2.2 1.6-3 4.5-3 8h3" /></>,
+  camion: <><path d="M1 4h14v12H1z" /><path d="M15 9h4l3 3v4h-7" /><circle cx="5.5" cy="18.5" r="2" /><circle cx="18.5" cy="18.5" r="2" /></>,
+  bouclier: <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />,
+  sac: <><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18M16 10a4 4 0 0 1-8 0" /></>,
+  fete: <><path d="M3 21h18M5 21V10l7-6 7 6v11" /><path d="M9 21v-5h6v5" /></>,
+  horloge: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
+  video: <><rect x="2" y="6" width="14" height="12" rx="2" /><path d="m16 10 6-3v10l-6-3" /></>,
+  coche: <path d="M20 6 9 17l-5-5" />,
+  fleche: <path d="M5 12h14M13 6l6 6-6 6" />,
+};
+
+/* Vagues lumineuses (fond des sections sombres et de l'appel final). */
+function Vagues({ claire = false }: { claire?: boolean }) {
+  const c = claire ? "rgba(14,140,118," : "rgba(30,216,184,";
+  return (
+    <svg className="cp-vagues" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 330 C 300 250, 520 380, 820 300 S 1250 180, 1440 240" stroke={`${c}0.55)`} strokeWidth="2" fill="none" />
+      <path d="M0 350 C 320 280, 560 390, 860 320 S 1260 210, 1440 270" stroke={`${c}0.3)`} strokeWidth="1.5" fill="none" />
+      <path d="M0 372 C 340 310, 600 400, 900 345 S 1280 245, 1440 300" stroke={`${c}0.18)`} strokeWidth="1.2" fill="none" />
+      <path d="M0 400 L0 360 C 330 300, 580 400, 880 330 S 1270 230, 1440 290 L1440 400 Z" fill={`${c}${claire ? "0.06" : "0.08"})`} />
+    </svg>
+  );
+}
+
+/* ───────── Maquettes produit ───────── */
+const PLATS = [
+  { nom: "Burgers", img: "/caisse/burger.webp" },
+  { nom: "Kebabs", img: "/caisse/kebab-assiette.webp" },
+  { nom: "Menus", img: "/caisse/menu-frites-boisson.webp" },
+  { nom: "Boissons", img: "/caisse/canette-coca-cola.png" },
+  { nom: "Frites", img: "/caisse/frites.webp" },
+  { nom: "Tenders", img: "/caisse/tenders.webp" },
+];
+const TICKET = [
+  { nom: "Burger Classic", prix: "8,90 €" },
+  { nom: "Frites", prix: "3,50 €" },
+  { nom: "Boisson", prix: "2,50 €" },
+];
+
+function EcranCaisse() {
+  return (
+    <div className="cp-ecran">
+      <div className="cp-ecran-menu">
+        <div className="cp-ecran-menu-logo">
+          <LogoMark size={22} />
+          <span>Caisse<span className="cp-turquoise">Plus</span></span>
+        </div>
+        {["Vente", "Produits", "Clients", "Stock", "Rapports", "Paramètres"].map((m, i) => (
+          <div key={m} className={`cp-ecran-menu-item${i === 0 ? " actif" : ""}`}>{m}</div>
+        ))}
+      </div>
+      <div className="cp-ecran-centre">
+        <div className="cp-ecran-barre">
+          <span className="cp-ecran-onglet">Comptoir</span>
+          <span>Table 4 · 12:42</span>
+        </div>
+        <div className="cp-ecran-grille">
+          {PLATS.map(p => (
+            <div key={p.nom} className="cp-plat">
+              <img src={p.img} alt="" loading="lazy" />
+              {p.nom}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="cp-ecran-ticket">
+        <div className="cp-ticket-titre">Commande n° 23</div>
+        {TICKET.map(l => (
+          <div key={l.nom} className="cp-ticket-ligne"><span>{l.nom}</span><span>{l.prix}</span></div>
+        ))}
+        <div className="cp-ticket-total"><span>Total</span><span>14,90 €</span></div>
+        <div className="cp-ticket-bouton">Encaisser</div>
+      </div>
+    </div>
+  );
+}
+
+function Tablette({ incline = false, pied = false }: { incline?: boolean; pied?: boolean }) {
+  return (
+    <div className="cp-tablette-scene" aria-hidden="true">
+      <div className={`cp-tablette${incline ? " cp-tablette-incline" : ""}`}>
+        <EcranCaisse />
+      </div>
+      {pied && (<><div className="cp-pied" /><div className="cp-pied-socle" /></>)}
+    </div>
+  );
+}
+
+function Telephone() {
+  return (
+    <div className="cp-telephone" aria-hidden="true">
+      <div className="cp-telephone-ecran">
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}><LogoMark size={18} /></div>
+        <div style={{ fontWeight: 700, fontSize: 11, marginBottom: 10 }}>Ma commande</div>
+        {TICKET.map(l => (
+          <div key={l.nom} className="cp-ticket-ligne"><span>{l.nom}</span><span>{l.prix}</span></div>
+        ))}
+        <div className="cp-ticket-total" style={{ marginTop: "auto" }}><span>Total</span><span>14,90 €</span></div>
+        <div className="cp-ticket-bouton">Paiement</div>
+      </div>
+    </div>
+  );
+}
+
+/* ───────── Contenus ───────── */
+const ATOUTS = [
+  { icone: I.panier, texte: "Vente & encaissement" },
+  { icone: I.borne, texte: "Borne de commande" },
+  { icone: I.couches, texte: "Stock & produits" },
+  { icone: I.calendrier, texte: "Locations" },
+  { icone: I.carte, texte: "Paiement sécurisé" },
+  { icone: I.nuage, texte: "100 % SaaS sans installation" },
+];
+
+const FONCTIONNALITES = [
+  { icone: I.ecran, titre: "Caisse tactile", texte: "Encaissez en quelques secondes. Tickets, remises, modes de paiement multiples. Clôture de caisse automatisée." },
+  { icone: I.couches, titre: "Gestion des stocks", texte: "Suivez vos ingrédients et produits en temps réel, avec alertes de réassort automatiques." },
+  { icone: I.boutique, titre: "Boutique en ligne", texte: "Votre site e-commerce sur votre domaine. Réservation, commandes et paiement intégrés." },
+  { icone: I.couverts, titre: "Borne de commande", texte: "Commandes autonomes, personnalisation des plats et paiement en ligne." },
+  { icone: I.camion, titre: "Livraison & à emporter", texte: "Gérez le click & collect et la livraison avec calcul automatique des frais." },
+  { icone: I.bouclier, titre: "Paiements sécurisés", texte: "Carte bancaire, wallet, QR code. Chaque paiement arrive directement sur votre compte." },
+];
+
+const SOLUTIONS = [
+  { photo: "/solutions/restauration.jpg", icone: I.couverts, titre: "Restauration & Snack", texte: "Encaissement rapide, menus, options, borne et fidélité." },
+  { photo: "/solutions/boutique.jpg", icone: I.sac, titre: "Boutique & Commerce", texte: "Vente en magasin et en ligne, stock, codes-barres et promotions." },
+  { photo: "/solutions/location.jpg", icone: I.calendrier, titre: "Location de matériel", texte: "Réservation, planning, cautions et gestion des retours." },
+  { photo: "/solutions/evenementiel.jpg", icone: I.fete, titre: "Événementiel", texte: "Vente et location pour vos événements, avec gestion des créneaux." },
+];
+
+const OFFRES = [
+  { nom: "Caisse", prix: "29", inclus: ["POS tactile complet", "Gestion stock automatique", "Clôture de caisse", "Rapports & statistiques", "Support inclus"], cta: "Choisir Caisse", vedette: false },
+  { nom: "Caisse + Site + Borne", prix: "49", inclus: ["Tout du plan Caisse", "Boutique en ligne sur votre domaine", "Borne de commande restauration", "Réservation / location", "Livraison avec calcul de distance", "Notifications temps réel"], cta: "Choisir le pack complet", vedette: true },
+  { nom: "Site web", prix: "29", inclus: ["Boutique e-commerce", "Domaine personnalisé", "Personnalisation (logo, couleurs)", "Compte client", "Catalogue produits"], cta: "Choisir Site", vedette: false },
+];
 
 export default function Home() {
   return (
-    <main style={{ background: BG, color: TEXT, margin: 0, padding: 0 }}>
-      <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: ${BG}; }
-        a { text-decoration: none; color: inherit; }
-        .btn-primary { background: ${BLUE}; color: #fff; border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; padding: 0.9rem 2rem; border-radius: 10px; transition: opacity 0.2s; display: inline-block; }
-        .btn-primary:hover { opacity: 0.88; }
-        .btn-gradient { background: ${GRADIENT}; color: #fff; border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; padding: 0.9rem 2rem; border-radius: 10px; transition: opacity 0.2s; display: inline-block; }
-        .btn-gradient:hover { opacity: 0.9; }
-        .btn-outline-dark { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.25); cursor: pointer; font-weight: 600; font-size: 0.95rem; padding: 0.87rem 2rem; border-radius: 10px; transition: all 0.2s; display: inline-block; }
-        .btn-outline-dark:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.4); }
-        .btn-outline { background: transparent; color: ${BLUE}; border: 1.5px solid ${BLUE}; cursor: pointer; font-weight: 600; font-size: 0.95rem; padding: 0.87rem 2rem; border-radius: 10px; transition: all 0.2s; display: inline-block; }
-        .btn-outline:hover { background: ${BLUE}; color: #fff; }
-        .feature-card { background: #fff; border-radius: 14px; padding: 1.6rem; border: 1px solid ${BORDER}; }
-        .icon-pill { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
-        .plan-card { background: #fff; border-radius: 14px; padding: 2.5rem 2rem; border: 1px solid ${BORDER}; flex: 1; min-width: 240px; }
-        .plan-card.featured { border-color: transparent; background: ${MARINE}; color: #fff; }
-        @media (max-width: 768px) {
-          .hero-grid { grid-template-columns: 1fr !important; }
-          .plans-grid { flex-direction: column !important; }
-          .features-grid { grid-template-columns: 1fr !important; }
-          .hero-title { font-size: 2.4rem !important; }
-          .mockup { display: none; }
-        }
-      `}</style>
-
-      {/* NAV */}
-      <nav style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(242,244,247,0.95)", backdropFilter: "blur(8px)", borderBottom: `1px solid ${BORDER}`, padding: "1rem 2rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <a href="/"><Logo on="light" /></a>
-        <div style={{ display: "flex", gap: "2rem" }}>
-          <a href="#fonctionnalites" style={{ fontSize: "0.9rem", fontWeight: 500, color: TEXT_LIGHT }}>Fonctionnalités</a>
-          <a href="#tarifs" style={{ fontSize: "0.9rem", fontWeight: 500, color: TEXT_LIGHT }}>Tarifs</a>
-          <a href="#demo" style={{ fontSize: "0.9rem", fontWeight: 500, color: TEXT_LIGHT }}>Démo</a>
-        </div>
-        <div style={{ display: "flex", gap: "0.75rem" }}>
-          <a href="https://app.caisseplus.fr" className="btn-outline" style={{ padding: "0.6rem 1.2rem", fontSize: "0.85rem" }}>Connexion</a>
-          <a href="#tarifs" className="btn-primary" style={{ padding: "0.6rem 1.2rem", fontSize: "0.85rem" }}>Démarrer</a>
+    <main>
+      {/* NAVIGATION */}
+      <nav className="cp-nav">
+        <div className="cp-nav-inner">
+          <a href="/" aria-label="CaissePlus — accueil"><Logo on="dark" size={36} /></a>
+          <div className="cp-nav-liens">
+            <a href="#fonctionnalites">Fonctionnalités</a>
+            <a href="#solutions">Solutions</a>
+            <a href="#tarifs">Tarifs</a>
+            <a href="#demo">Démo</a>
+          </div>
+          <div className="cp-nav-actions">
+            <a href="/connexion" className="cp-btn cp-btn-contour-nuit cp-btn-petit">Connexion</a>
+            <a href="#tarifs" className="cp-btn cp-btn-primaire cp-btn-petit">Démarrer</a>
+          </div>
         </div>
       </nav>
 
       {/* HERO */}
-      <section style={{ background: MARINE }}>
-        <div className="hero-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 2rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
-          <div>
-            <Image src="/logo-Cplus.png" alt="CaissePlus" width={555} height={329} priority style={{ width: 190, height: "auto", marginBottom: "1.8rem" }} />
-            <div style={{ display: "inline-block", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "20px", padding: "0.3rem 1rem", fontSize: "0.72rem", color: BLUE_LIGHT, fontWeight: 700, marginBottom: "1.5rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Logiciel de caisse SaaS</div>
-            <h1 className="hero-title" style={{ fontSize: "3rem", lineHeight: 1.15, fontWeight: 600, color: "#fff", marginBottom: "1.5rem" }}>
-              La caisse connectée pour boutiques et restaurants
-            </h1>
-            <p style={{ fontSize: "1.05rem", color: HERO_SUBTEXT, lineHeight: 1.7, marginBottom: "2.5rem" }}>
-              Vendez, louez, encaissez — depuis un seul outil. Borne de commande, site e-commerce, gestion stock et locations avec empreinte bancaire. Tout est inclus, rien à installer.
-            </p>
-            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              <a href="#tarifs" className="btn-gradient">Commencer à 29€/mois</a>
-              <a href="#demo" className="btn-outline-dark">Demander une démo</a>
+      <section className="cp-section-nuit cp-hero">
+        <Vagues />
+        <div className="cp-conteneur">
+          <div className="cp-hero-grille">
+            <div>
+              <span className="cp-pastille">Logiciel de caisse SaaS</span>
+              <h1>
+                La caisse connectée pour <span className="cp-turquoise">boutiques</span> et <span className="cp-turquoise">restaurants</span>
+              </h1>
+              <p className="cp-hero-texte">
+                Vendez, encaissez, gérez vos stocks, vos locations et vos commandes, depuis un seul outil simple, puissant et 100 % en ligne.
+              </p>
+              <div className="cp-hero-boutons">
+                <a href="#tarifs" className="cp-btn cp-btn-primaire">Commencer à 29€/mois <Icone taille={18}>{I.fleche}</Icone></a>
+                <a href="#demo" className="cp-btn cp-btn-contour-nuit">Demander une démo</a>
+              </div>
             </div>
-            <p style={{ marginTop: "1.2rem", fontSize: "0.82rem", color: HERO_SUBTEXT }}>Sans engagement — résiliable à tout moment</p>
+            <Tablette incline pied />
           </div>
-          <div className="mockup" style={{ position: "relative" }}>
-            <div style={{ background: MARINE_LIGHT, borderRadius: "16px", padding: "1.5rem", border: "1px solid rgba(255,255,255,0.08)" }}>
-              <div style={{ display: "flex", gap: "0.4rem", marginBottom: "1rem" }}>
-                {["#ff5f57", "#ffbd2e", "#28c840"].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: "50%", background: c }} />)}
+          <div className="cp-atouts">
+            {ATOUTS.map(a => (
+              <div key={a.texte} className="cp-atout">
+                <Icone taille={30}>{a.icone}</Icone>
+                {a.texte}
               </div>
-              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "1rem" }}>
-                <div style={{ color: HERO_SUBTEXT, fontSize: "0.7rem", marginBottom: "0.8rem", letterSpacing: "0.1em" }}>TICKET EN COURS</div>
-                {[{ nom: "Robe Lin Beige — T38", prix: "89,00 €" }, { nom: "Location Blazer — 3 jours", prix: "45,00 €" }, { nom: "Burger Classic + Frites", prix: "14,50 €" }].map((item, i) => (
-                  <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "0.5rem 0", borderBottom: "1px solid rgba(255,255,255,0.08)", color: "#fff", fontSize: "0.78rem" }}>
-                    <span>{item.nom}</span>
-                    <span style={{ color: BLUE_LIGHT, fontWeight: 600 }}>{item.prix}</span>
-                  </div>
-                ))}
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "0.8rem 0 0", color: "#fff", fontWeight: 700, fontSize: "0.9rem" }}>
-                  <span>Total</span><span style={{ color: BLUE_LIGHT }}>148,50 €</span>
-                </div>
-                <div style={{ marginTop: "1rem", background: BLUE, borderRadius: "8px", padding: "0.7rem", textAlign: "center", color: "#fff", fontWeight: 700, fontSize: "0.85rem" }}>Encaisser</div>
-              </div>
-            </div>
-            <div style={{ position: "absolute", bottom: -16, left: -16, background: "#fff", borderRadius: "12px", padding: "0.8rem 1.2rem", boxShadow: "0 8px 24px rgba(13,27,42,0.16)", display: "flex", alignItems: "center", gap: "0.6rem" }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={GREEN} strokeWidth="1.8" strokeLinecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
-              <div>
-                <div style={{ fontSize: "0.7rem", color: TEXT_LIGHT }}>Paiement sécurisé</div>
-                <div style={{ fontSize: "0.78rem", fontWeight: 700, color: TEXT }}>Transactions certifiées</div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* BANDE */}
-      <div style={{ background: "#fff", borderBottom: `1px solid ${BORDER}`, padding: "1.2rem 2rem", textAlign: "center" }}>
-        <p style={{ fontSize: "0.8rem", color: TEXT_LIGHT, letterSpacing: "0.08em" }}>
-          DÉJÀ UTILISÉ PAR&nbsp;&nbsp;·&nbsp;&nbsp;<strong style={{ color: TEXT }}>Shahida Collection</strong>&nbsp;&nbsp;·&nbsp;&nbsp;et bientôt votre établissement
-        </p>
-      </div>
-
-      {/* FEATURES */}
-      <section id="fonctionnalites" style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 2rem" }}>
-        <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-          <div style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.08em", color: BLUE, textTransform: "uppercase", marginBottom: "0.8rem" }}>Fonctionnalités</div>
-          <h2 style={{ fontSize: "2rem", fontWeight: 600, color: TEXT, marginBottom: "0.8rem" }}>Tout ce dont vous avez besoin, rien de superflu</h2>
-          <p style={{ color: TEXT_LIGHT, fontSize: "1rem", maxWidth: 540, margin: "0 auto" }}>Un seul abonnement couvre la vente, la location, la restauration et votre présence en ligne.</p>
+      {/* FONCTIONNALITÉS */}
+      <section id="fonctionnalites" className="cp-section">
+        <div className="cp-conteneur">
+          <div className="cp-entete">
+            <span className="cp-pastille">Fonctionnalités</span>
+            <h2 className="cp-titre">Tout ce dont vous avez besoin, rien de superflu</h2>
+            <p className="cp-sous-titre">Un seul abonnement couvre la vente, la location, la restauration et votre présence en ligne.</p>
+          </div>
+          <div className="cp-grille-3">
+            {FONCTIONNALITES.map(f => (
+              <div key={f.titre} className="cp-carte">
+                <div className="cp-icone"><Icone>{f.icone}</Icone></div>
+                <h3>{f.titre}</h3>
+                <p>{f.texte}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="features-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
-          {[
-            { color: BLUE, bg: "rgba(37,99,235,0.1)", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={BLUE} strokeWidth="1.8" strokeLinecap="round"><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>, titre: "Caisse tactile", texte: "Encaissez en quelques secondes. Tickets, remises, modes de paiement multiples. Clôture de caisse automatisée." },
-            { color: GREEN, bg: "rgba(34,197,94,0.1)", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={GREEN} strokeWidth="1.8" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>, titre: "Location sécurisée", texte: "Empreinte bancaire en garantie, contrat signé sur tablette. Caution digitale — aucune avance de cash pour vos clients." },
-            { color: BLUE, bg: "rgba(37,99,235,0.1)", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={BLUE} strokeWidth="1.8" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>, titre: "Boutique en ligne", texte: "Votre site e-commerce sur votre propre domaine. Réservation, essayage, compte client intégré." },
-            { color: TEXT, bg: "rgba(13,27,42,0.08)", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={TEXT} strokeWidth="1.8" strokeLinecap="round"><rect x="1" y="3" width="15" height="13" rx="2" /><polygon points="16 8 20 8 23 11 23 16 16 16 16 8" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></svg>, titre: "Borne restauration", texte: "Commande autonome, personnalisation des plats, paiement en ligne. Écran cuisine, écran salle, livraison avec calcul de distance." },
-            { color: GREEN, bg: "rgba(34,197,94,0.1)", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={GREEN} strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>, titre: "WhatsApp automatique", texte: "Vos clients reçoivent une notification à chaque étape : commande reçue, en préparation, prête, en livraison." },
-            { color: BLUE, bg: "rgba(37,99,235,0.1)", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={BLUE} strokeWidth="1.8" strokeLinecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>, titre: "Transactions sécurisées", texte: "Chaque paiement transite directement vers votre compte bancaire. Vos revenus, vos règles, votre argent." },
-          ].map((f, i) => (
-            <div key={i} className="feature-card">
-              <div className="icon-pill" style={{ background: f.bg }}>{f.icon}</div>
-              <h3 style={{ fontSize: "1.05rem", fontWeight: 600, marginBottom: "0.5rem", color: TEXT }}>{f.titre}</h3>
-              <p style={{ fontSize: "0.88rem", color: TEXT_LIGHT, lineHeight: 1.65 }}>{f.texte}</p>
-            </div>
-          ))}
+      </section>
+
+      {/* SOLUTIONS */}
+      <section id="solutions" className="cp-section cp-section-claire">
+        <div className="cp-conteneur">
+          <div className="cp-entete">
+            <span className="cp-pastille">Nos solutions</span>
+            <h2 className="cp-titre">Une solution adaptée à votre activité</h2>
+            <p className="cp-sous-titre">CaissePlus s&apos;adapte à tous les commerces : restaurant, snack, boutique, location de matériel ou événementiel.</p>
+          </div>
+          <div className="cp-grille-4">
+            {SOLUTIONS.map(s => (
+              <div key={s.titre} className="cp-solution">
+                <div className="cp-solution-photo">
+                  <img src={s.photo} alt="" loading="lazy" width={640} height={420} />
+                  <div className="cp-solution-pastille"><Icone taille={20}>{s.icone}</Icone></div>
+                </div>
+                <div className="cp-solution-corps">
+                  <h3>{s.titre}</h3>
+                  <p>{s.texte}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* TARIFS */}
-      <section id="tarifs" style={{ background: "#fff", padding: "5rem 2rem", borderTop: `1px solid ${BORDER}` }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-            <div style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.08em", color: BLUE, textTransform: "uppercase", marginBottom: "0.8rem" }}>Tarifs</div>
-            <h2 style={{ fontSize: "2rem", fontWeight: 600, color: TEXT, marginBottom: "0.8rem" }}>Des tarifs clairs, sans surprise</h2>
-            <p style={{ color: TEXT_LIGHT, fontSize: "1rem" }}>Choisissez ce dont vous avez besoin. Changez de plan à tout moment.</p>
+      <section id="tarifs" className="cp-section cp-section-nuit">
+        <div className="cp-conteneur">
+          <div className="cp-entete">
+            <span className="cp-pastille">Tarifs</span>
+            <h2 className="cp-titre">Des tarifs clairs, sans surprise</h2>
+            <p className="cp-sous-titre">Choisissez ce dont vous avez besoin. Changez de plan à tout moment.</p>
           </div>
-          <div className="plans-grid" style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", justifyContent: "center" }}>
-            {[
-              { nom: "Caisse", prix: "29", desc: "Pour les boutiques physiques", inclus: ["POS tactile complet", "Gestion stock automatique", "Location + empreinte bancaire", "Contrat signé sur tablette", "Clôture de caisse", "Back-office gérant"], cta: "Choisir Caisse", featured: false },
-              { nom: "Caisse + Site + Borne", prix: "49", desc: "Le kit complet", inclus: ["Tout du plan Caisse", "Boutique en ligne sur votre domaine", "Borne de commande restauration", "Écran cuisine + écran salle", "Livraison avec calcul de distance", "WhatsApp automatique", "Notifications temps réel"], cta: "Choisir le pack complet", featured: true },
-              { nom: "Site web", prix: "29", desc: "Votre vitrine en ligne", inclus: ["Boutique e-commerce", "Domaine custom inclus", "Personnalisation couleurs/logo", "Réservation de créneaux", "Compte client", "Catalogue produits"], cta: "Choisir Site", featured: false },
-            ].map((plan, i) => (
-              <div key={i} className={`plan-card${plan.featured ? " featured" : ""}`}>
-                {plan.featured && <div style={{ background: GRADIENT, color: "#fff", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.08em", padding: "0.25rem 0.8rem", borderRadius: "20px", display: "inline-block", marginBottom: "1rem", textTransform: "uppercase" }}>Le plus populaire</div>}
-                <div style={{ fontSize: "0.82rem", color: plan.featured ? BLUE_LIGHT : TEXT_LIGHT, marginBottom: "0.4rem" }}>{plan.desc}</div>
-                <div style={{ fontSize: "1.1rem", fontWeight: 600, color: plan.featured ? "#fff" : TEXT, marginBottom: "0.5rem" }}>{plan.nom}</div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: "0.3rem", marginBottom: "1.5rem" }}>
-                  <span style={{ fontSize: "2.8rem", fontWeight: 700, color: plan.featured ? "#fff" : TEXT }}>{plan.prix}€</span>
-                  <span style={{ fontSize: "0.85rem", color: plan.featured ? HERO_SUBTEXT : TEXT_LIGHT }}>/mois</span>
-                </div>
-                <ul style={{ listStyle: "none", marginBottom: "2rem" }}>
-                  {plan.inclus.map((item, j) => (
-                    <li key={j} style={{ display: "flex", alignItems: "flex-start", gap: "0.6rem", fontSize: "0.85rem", color: plan.featured ? "#dbe1ea" : TEXT_LIGHT, marginBottom: "0.6rem" }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={plan.featured ? BLUE_LIGHT : GREEN} strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><polyline points="20 6 9 17 4 12" /></svg>
-                      {item}
-                    </li>
+          <div className="cp-tarifs">
+            {OFFRES.map(o => (
+              <div key={o.nom} className={`cp-offre${o.vedette ? " cp-offre-vedette" : ""}`}>
+                {o.vedette && <span className="cp-offre-badge">Le plus populaire</span>}
+                <div className="cp-offre-nom">{o.nom}</div>
+                <div className="cp-offre-prix"><strong>{o.prix}€</strong><span>/mois</span></div>
+                <ul>
+                  {o.inclus.map(item => (
+                    <li key={item}><Icone taille={16}>{I.coche}</Icone>{item}</li>
                   ))}
                 </ul>
-                <a href="mailto:contact@caisseplus.fr?subject=Abonnement CaissePlus" className={plan.featured ? "btn-gradient" : "btn-outline"} style={{ display: "block", textAlign: "center", width: "100%" }}>{plan.cta}</a>
+                <a
+                  href={`mailto:${CONTACT}?subject=Abonnement CaissePlus`}
+                  className={`cp-btn cp-btn-bloc ${o.vedette ? "cp-btn-primaire" : "cp-btn-contour-turquoise"}`}
+                >
+                  {o.cta}
+                </a>
               </div>
             ))}
           </div>
-          <p style={{ textAlign: "center", marginTop: "2rem", fontSize: "0.82rem", color: TEXT_LIGHT }}>TVA non applicable — art. 293B du CGI · Sans engagement · Résiliable à tout moment</p>
+          <p className="cp-mention">TVA non applicable — art. 293B du CGI · Sans engagement · Résiliable à tout moment</p>
         </div>
       </section>
 
-      {/* DEMO */}
-      <section id="demo" style={{ maxWidth: 680, margin: "0 auto", padding: "5rem 2rem", textAlign: "center" }}>
-        <h2 style={{ fontSize: "2rem", fontWeight: 600, color: TEXT, marginBottom: "1rem" }}>Vous voulez voir CaissePlus en action ?</h2>
-        <p style={{ color: TEXT_LIGHT, fontSize: "1rem", marginBottom: "2.5rem", lineHeight: 1.7 }}>Prenez 20 minutes avec nous — on vous montre la caisse, la borne et le site depuis un vrai compte de démonstration.</p>
-        <a href="mailto:contact@caisseplus.fr?subject=Demande de démo CaissePlus" className="btn-primary" style={{ fontSize: "1rem", padding: "1rem 2.5rem" }}>Demander une démo gratuite</a>
-        <p style={{ marginTop: "1.2rem", fontSize: "0.82rem", color: TEXT_LIGHT }}>Réponse sous 24h · contact@caisseplus.fr</p>
+      {/* DÉMO */}
+      <section id="demo" className="cp-section cp-section-nuit" style={{ borderTop: "1px solid rgba(30,216,184,0.12)" }}>
+        <Vagues />
+        <div className="cp-conteneur">
+          <div className="cp-demo-grille">
+            <div className="cp-demo-visuel">
+              <Tablette />
+              <Telephone />
+            </div>
+            <div>
+              <span className="cp-pastille">Démo</span>
+              <h2 className="cp-titre">Vous voulez voir CaissePlus en action ?</h2>
+              <p className="cp-sous-titre" style={{ marginBottom: "2rem" }}>
+                Prenez 20 minutes avec nous — on vous montre la caisse, la borne et le site depuis un vrai compte de démonstration.
+              </p>
+              <a href={`mailto:${CONTACT}?subject=Demande de démo CaissePlus`} className="cp-btn cp-btn-primaire">
+                Demander une démo gratuite <Icone taille={18}>{I.fleche}</Icone>
+              </a>
+              <div className="cp-demo-infos">
+                <span><Icone taille={18}>{I.horloge}</Icone>Démo de 20 min</span>
+                <span><Icone taille={18}>{I.video}</Icone>En visio</span>
+                <span><Icone taille={18}>{I.calendrier}</Icone>Sans engagement</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* FOOTER */}
-      <footer style={{ background: "#fff", borderTop: `1px solid ${BORDER}`, padding: "2rem", textAlign: "center" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "0.8rem" }}>
-          <Logo on="light" size={20} fontSize="1rem" />
+      {/* APPEL FINAL */}
+      <section className="cp-final">
+        <Vagues claire />
+        <div className="cp-conteneur cp-final-contenu">
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.8rem" }}>
+            <Logo on="light" size={64} />
+          </div>
+          <h2 className="cp-titre">Prêt à digitaliser votre commerce ?</h2>
+          <p className="cp-sous-titre">Rejoignez les commerçants qui font déjà confiance à CaissePlus.</p>
+          <div className="cp-final-boutons">
+            <a href="#tarifs" className="cp-btn cp-btn-primaire">Démarrer maintenant <Icone taille={18}>{I.fleche}</Icone></a>
+            <a href={`mailto:${CONTACT}`} className="cp-btn cp-btn-contour-clair">Nous contacter</a>
+          </div>
+          <div className="cp-final-garanties">
+            <span><Icone taille={18}>{I.coche}</Icone>Sans engagement</span>
+            <span><Icone taille={18}>{I.coche}</Icone>Mise en route rapide</span>
+            <span><Icone taille={18}>{I.coche}</Icone>Support réactif</span>
+          </div>
         </div>
-        <p style={{ fontSize: "0.8rem", color: TEXT_LIGHT }}>© {new Date().getFullYear()} CaissePlus · Logiciel de caisse SaaS · contact@caisseplus.fr</p>
+      </section>
+
+      {/* PIED DE PAGE */}
+      <footer className="cp-footer">
+        <div className="cp-conteneur cp-footer-inner">
+          <Logo on="dark" size={26} />
+          <p>© {new Date().getFullYear()} CaissePlus · Logiciel de caisse SaaS · <a href={`mailto:${CONTACT}`}>{CONTACT}</a></p>
+        </div>
       </footer>
     </main>
   );

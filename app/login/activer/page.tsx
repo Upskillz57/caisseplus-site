@@ -3,10 +3,10 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Logo } from "../../components/Logo";
 
-const BLUE = "#2563EB";
+const BLUE = "#0E8C76";
 const GREEN = "#22C55E";
 const RED = "#EF4444";
-const BG = "#F2F4F7";
+const BG = "#F4F8F8";
 const TEXT = "#0D1B2A";
 const TEXT_LIGHT = "#5B6472";
 const BORDER = "rgba(13,27,42,0.12)";

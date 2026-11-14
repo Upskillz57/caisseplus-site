@@ -2,14 +2,14 @@
 import { useState } from "react";
 import { Logo } from "../components/Logo";
 
-const BLUE = "#2563EB";
+const BLUE = "#0E8C76";
 const GREEN = "#22C55E";
 const RED = "#EF4444";
-const BG = "#F2F4F7";
+const BG = "#F4F8F8";
 const TEXT = "#0D1B2A";
 const TEXT_LIGHT = "#5B6472";
 const BORDER = "rgba(13,27,42,0.12)";
-const GRADIENT = "linear-gradient(135deg, #7C83F5 0%, #D99AEC 100%)";
+const GRADIENT = "linear-gradient(180deg, #17B395 0%, #0C8570 100%)";
 
 const PLANS = [
   {
@@ -147,7 +147,7 @@ export default function Inscription() {
                 { id: "mode", label: "Commerce / Boutique", desc: "Vente, location, gestion stock" },
                 { id: "restauration", label: "Restauration / Food", desc: "Borne de commande, cuisine, livraison" },
               ].map(a => (
-                <div key={a.id} onClick={() => setActivite(a.id)} style={{ display: "flex", alignItems: "center", gap: "0.8rem", padding: "0.75rem 1rem", border: `1.5px solid ${activite === a.id ? BLUE : BORDER}`, borderRadius: "10px", cursor: "pointer", background: activite === a.id ? "rgba(37,99,235,0.05)" : "#fff" }}>
+                <div key={a.id} onClick={() => setActivite(a.id)} style={{ display: "flex", alignItems: "center", gap: "0.8rem", padding: "0.75rem 1rem", border: `1.5px solid ${activite === a.id ? BLUE : BORDER}`, borderRadius: "10px", cursor: "pointer", background: activite === a.id ? "rgba(14,140,118,0.05)" : "#fff" }}>
                   <div style={{ width: 16, height: 16, borderRadius: "50%", border: `2px solid ${activite === a.id ? BLUE : "#ccc"}`, background: activite === a.id ? BLUE : "transparent", flexShrink: 0 }} />
                   <div>
                     <div style={{ fontSize: "0.88rem", fontWeight: 600, color: TEXT }}>{a.label}</div>

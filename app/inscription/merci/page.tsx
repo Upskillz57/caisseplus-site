@@ -3,9 +3,9 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { Logo } from "../../components/Logo";
 
-const BLUE = "#2563EB";
+const BLUE = "#0E8C76";
 const GREEN = "#22C55E";
-const BG = "#F2F4F7";
+const BG = "#F4F8F8";
 const TEXT = "#0D1B2A";
 const TEXT_LIGHT = "#5B6472";
 const BORDER = "rgba(13,27,42,0.12)";
@@ -27,7 +27,7 @@ function MerciContent() {
         <p style={{ color: TEXT_LIGHT, fontSize: "1rem", lineHeight: 1.7, marginBottom: "2rem" }}>
           Votre compte est en cours de création. Vous recevrez un email avec votre lien d'accès dans quelques minutes.
         </p>
-        <div style={{ background: "rgba(37,99,235,0.06)", border: "1px solid rgba(37,99,235,0.2)", borderRadius: "10px", padding: "1rem 1.2rem", marginBottom: "2rem", fontSize: "0.88rem", color: TEXT }}>
+        <div style={{ background: "rgba(14,140,118,0.06)", border: "1px solid rgba(14,140,118,0.2)", borderRadius: "10px", padding: "1rem 1.2rem", marginBottom: "2rem", fontSize: "0.88rem", color: TEXT }}>
           Votre espace sera accessible dans <strong>5 à 10 minutes</strong> le temps que votre adresse soit activée. Si vous tentez de vous connecter trop tôt, vous verrez une erreur SSL — c'est normal, patientez quelques instants.
         </div>
         <div style={{ background: "#fff", borderRadius: "14px", padding: "1.5rem", border: `1px solid ${BORDER}`, marginBottom: "2rem", textAlign: "left" }}>
