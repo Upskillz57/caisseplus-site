@@ -152,9 +152,9 @@ const SOLUTIONS = [
 ];
 
 const OFFRES = [
-  { nom: "Caisse", prix: "29", inclus: ["POS tactile complet", "Gestion stock automatique", "Clôture de caisse", "Rapports & statistiques", "Support inclus"], cta: "Choisir Caisse", vedette: false },
-  { nom: "Caisse + Site + Borne", prix: "49", inclus: ["Tout du plan Caisse", "Boutique en ligne sur votre domaine", "Borne de commande restauration", "Réservation / location", "Livraison avec calcul de distance", "Notifications temps réel"], cta: "Choisir le pack complet", vedette: true },
-  { nom: "Site web", prix: "29", inclus: ["Boutique e-commerce", "Domaine personnalisé", "Personnalisation (logo, couleurs)", "Compte client", "Catalogue produits"], cta: "Choisir Site", vedette: false },
+  { id: "caisse", nom: "Caisse", prix: "29", inclus: ["POS tactile complet", "Gestion stock automatique", "Clôture de caisse", "Rapports & statistiques", "Support inclus"], cta: "Choisir Caisse", vedette: false },
+  { id: "pack", nom: "Caisse + Site + Borne", prix: "49", inclus: ["Tout du plan Caisse", "Boutique en ligne sur votre domaine", "Borne de commande restauration", "Réservation / location", "Livraison avec calcul de distance", "Notifications temps réel"], cta: "Choisir le pack complet", vedette: true },
+  { id: "site", nom: "Site web", prix: "29", inclus: ["Boutique e-commerce", "Domaine personnalisé", "Personnalisation (logo, couleurs)", "Compte client", "Catalogue produits"], cta: "Choisir Site", vedette: false },
 ];
 
 export default function Home() {
@@ -273,7 +273,7 @@ export default function Home() {
                   ))}
                 </ul>
                 <a
-                  href={`mailto:${CONTACT}?subject=Abonnement CaissePlus`}
+                  href={`/inscription?plan=${o.id}`}
                   className={`cp-btn cp-btn-bloc ${o.vedette ? "cp-btn-primaire" : "cp-btn-contour-turquoise"}`}
                 >
                   {o.cta}
@@ -323,7 +323,7 @@ export default function Home() {
           <h2 className="cp-titre">Prêt à digitaliser votre commerce ?</h2>
           <p className="cp-sous-titre">Rejoignez les commerçants qui font déjà confiance à CaissePlus.</p>
           <div className="cp-final-boutons">
-            <a href="#tarifs" className="cp-btn cp-btn-primaire">Démarrer maintenant <Icone taille={18}>{I.fleche}</Icone></a>
+            <a href="/inscription" className="cp-btn cp-btn-primaire">Démarrer maintenant <Icone taille={18}>{I.fleche}</Icone></a>
             <a href={`mailto:${CONTACT}`} className="cp-btn cp-btn-contour-clair">Nous contacter</a>
           </div>
           <div className="cp-final-garanties">

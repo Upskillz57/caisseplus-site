@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "../components/Logo";
 
 const BLUE = "#0E8C76";
@@ -43,6 +43,12 @@ export default function Inscription() {
   const [activite, setActivite] = useState("mode");
   const [loading, setLoading] = useState(false);
   const [erreur, setErreur] = useState("");
+
+  // Formule choisie sur l'accueil (/inscription?plan=caisse|pack|site) : présélectionnée.
+  useEffect(() => {
+    const choisi = new URLSearchParams(window.location.search).get("plan");
+    if (choisi && PLANS.some(p => p.id === choisi)) setPlan(choisi);
+  }, []);
 
   async function handleSubmit() {
     setErreur("");
