@@ -151,6 +151,13 @@ const SOLUTIONS = [
   { photo: "/solutions/evenementiel.jpg", icone: I.fete, titre: "Événementiel", texte: "Vente et location pour vos événements, avec gestion des créneaux." },
 ];
 
+const BORNE_MOBILE = [
+  { icone: I.borne, titre: "Une borne connectée chez vos clients", texte: "Ils commandent depuis leur téléphone, sur place, à emporter ou en livraison, et paient en ligne." },
+  { icone: I.couverts, titre: "Envoi direct en cuisine", texte: "Chaque commande s'affiche sur l'écran cuisine, sans ressaisie ni ticket perdu." },
+  { icone: I.ecran, titre: "Gestion interne centralisée", texte: "Commandes de la caisse, de la borne et du téléphone réunies sur un seul écran." },
+  { icone: I.camion, titre: "Livraison et suivi", texte: "Frais calculés selon la distance, suivi de chaque livraison et client prévenu à chaque étape." },
+];
+
 const OFFRES = [
   { id: "caisse", nom: "Caisse", prix: "29", inclus: ["POS tactile complet", "Gestion stock automatique", "Clôture de caisse", "Rapports & statistiques", "Support inclus"], cta: "Choisir Caisse", vedette: false },
   { id: "pack", nom: "Caisse + Site + Borne", prix: "49", inclus: ["Tout du plan Caisse", "Boutique en ligne sur votre domaine", "Borne de commande restauration", "Réservation / location", "Livraison avec calcul de distance", "Notifications temps réel"], cta: "Choisir le pack complet", vedette: true },
@@ -249,6 +256,46 @@ export default function Home() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Borne sur le téléphone des clients */}
+          <div className="cp-borne-mobile">
+            <div className="cp-borne-mobile-texte">
+              <span className="cp-pastille">Borne sur mobile</span>
+              <h3 className="cp-borne-mobile-titre">Votre borne de commande, directement sur le téléphone de vos clients</h3>
+              <p className="cp-sous-titre">
+                Vos clients commandent depuis chez eux ou à table, sans application à installer. Chaque commande arrive aussitôt en cuisine et vous suivez tout, de la préparation à la livraison.
+              </p>
+              <ul className="cp-borne-mobile-liste">
+                {BORNE_MOBILE.map(b => (
+                  <li key={b.titre}>
+                    <span className="cp-icone"><Icone taille={20}>{b.icone}</Icone></span>
+                    <div><strong>{b.titre}</strong><span>{b.texte}</span></div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="cp-borne-mobile-visuel" aria-hidden="true">
+              <div className="cp-telephone cp-telephone-seul">
+                <div className="cp-telephone-ecran">
+                  <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}><LogoMark size={20} /></div>
+                  <div style={{ fontWeight: 700, fontSize: 11, marginBottom: 8 }}>Comment souhaitez-vous commander ?</div>
+                  <div className="cp-modes">
+                    {["Sur place", "À emporter", "Livraison"].map((m, i) => (
+                      <span key={m} className={i === 1 ? "actif" : ""}>{m}</span>
+                    ))}
+                  </div>
+                  <div className="cp-ecran-grille" style={{ gridTemplateColumns: "repeat(2, 1fr)", margin: "10px 0" }}>
+                    {PLATS.slice(0, 4).map(p => (
+                      <div key={p.nom} className="cp-plat"><img src={p.img} alt="" loading="lazy" />{p.nom}</div>
+                    ))}
+                  </div>
+                  <div className="cp-ticket-bouton" style={{ marginTop: "auto" }}>Commander · 14,90 €</div>
+                </div>
+              </div>
+              <div className="cp-bulle cp-bulle-haut"><Icone taille={16}>{I.couverts}</Icone>Envoyée en cuisine</div>
+              <div className="cp-bulle cp-bulle-bas"><Icone taille={16}>{I.camion}</Icone>En livraison · 12 min</div>
+            </div>
           </div>
         </div>
       </section>
